@@ -1,0 +1,142 @@
+---
+title: "Section_1_Data_Cleaning_Script"
+author: "Weige Yang, Zhu(Zoe) Yao, Shihan Wang, Ziyuan Yan"
+date: "9/9/2019"
+output: pdf_document
+---
+
+```{r}
+#load packages.
+library(dplyr)
+library(tidyverse)
+library(lfe)
+library(stargazer)
+```
+
+Load randomized_data_for_hw.csv using read.csv.
+```{r}
+dat <- read.csv(file = '~/brandattitudes/randomized_data_for_hw.csv')
+```
+
+Log-transform ad metrics, competitor ad metrics, and brand attitude metrics using the log of (x+1).
+```{r}
+cols <- c("qua","val","sat","nat","loc","dig","compnat","comploc","compdig")
+dat[cols] <- log1p(dat[cols])           
+```
+
+```{r}
+Brand <- dat %>% pull(Brand)
+Industry <- dat %>% pull(Industry)
+time_period <- dat %>% pull(time_period)
+yrqtr <- dat %>% pull(yrqtr)
+qua_vol <- dat %>% pull(qua_vol)
+```
+
+Create 13 lag variables for each brand attitude metric.
+```{r}
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1qua = lag(qua, n=1),
+         lag2qua = lag(qua, n=2), 
+         lag3qua = lag(qua, n=3),
+         lag4qua = lag(qua, n=4),
+         lag5qua = lag(qua, n=5),
+         lag6qua = lag(qua, n=6),
+         lag7qua = lag(qua, n=7),
+         lag8qua = lag(qua, n=8),
+         lag9qua = lag(qua, n=9),
+         lag10qua = lag(qua, n=10),
+         lag11qua = lag(qua, n=11),
+         lag12qua = lag(qua, n=12),
+         lag13qua = lag(qua, n=13))
+
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1val = lag(val, n=1),
+         lag2val = lag(val, n=2), 
+         lag3val = lag(val, n=3),
+         lag4val = lag(val, n=4),
+         lag5val = lag(val, n=5),
+         lag6val = lag(val, n=6),
+         lag7val = lag(val, n=7),
+         lag8val = lag(val, n=8),
+         lag9val = lag(val, n=9),
+         lag10val = lag(val, n=10),
+         lag11val = lag(val, n=11),
+         lag12val = lag(val, n=12),
+         lag13val = lag(val, n=13))
+
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1sat = lag(sat, n=1),
+         lag2sat = lag(sat, n=2), 
+         lag3sat = lag(sat, n=3),
+         lag4sat = lag(sat, n=4),
+         lag5sat = lag(sat, n=5),
+         lag6sat = lag(sat, n=6),
+         lag7sat = lag(sat, n=7),
+         lag8sat = lag(sat, n=8),
+         lag9sat = lag(sat, n=9),
+         lag10sat = lag(sat, n=10),
+         lag11sat = lag(sat, n=11),
+         lag12sat = lag(sat, n=12),
+         lag13sat = lag(sat, n=13))
+```
+
+Create 5 lags for each advertising spend metric (both own brand and competitor).
+```{r}
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1nat = lag(nat, n=1),
+         lag2nat = lag(nat, n=2), 
+         lag3nat = lag(nat, n=3),
+         lag4nat = lag(nat, n=4),
+         lag5nat = lag(nat, n=5))
+
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1loc = lag(loc, n=1),
+         lag2loc = lag(loc, n=2), 
+         lag3loc = lag(loc, n=3),
+         lag4loc = lag(loc, n=4),
+         lag5loc = lag(loc, n=5))
+
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1dig = lag(dig, n=1),
+         lag2dig = lag(dig, n=2), 
+         lag3dig = lag(dig, n=3),
+         lag4dig = lag(dig, n=4),
+         lag5dig = lag(dig, n=5))
+
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1compnat = lag(compnat, n=1),
+         lag2compnat = lag(compnat, n=2), 
+         lag3compnat = lag(compnat, n=3),
+         lag4compnat = lag(compnat, n=4),
+         lag5compnat = lag(compnat, n=5))
+
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1comploc = lag(comploc, n=1),
+         lag2comploc = lag(comploc, n=2), 
+         lag3comploc = lag(comploc, n=3),
+         lag4comploc = lag(comploc, n=4),
+         lag5comploc = lag(comploc, n=5))
+
+dat<- dat %>% 
+  group_by(Brand) %>% 
+  mutate(lag1compdig = lag(compdig, n=1),
+         lag2compdig = lag(compdig, n=2), 
+         lag3compdig = lag(compdig, n=3),
+         lag4compdig = lag(compdig, n=4),
+         lag5compdig = lag(compdig, n=5))
+```
+
+Drop the first 13 observations for each brand, since the lagged brand attitude metrics contain NAs during the first 13 weeks of the data.
+```{r}
+dat <- dat %>%
+  group_by(Brand) %>%
+  slice(14:n())
+```

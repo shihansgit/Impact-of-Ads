@@ -1,0 +1,121 @@
+---
+title: "Section_2_Estimation_Script"
+author: "Weige Yang, Zhu(Zoe) Yao, Shihan Wang, Ziyuan Yan"
+date: "9/9/2019"
+output: pdf_document
+---
+
+Question 1
+linear regression
+```{r}
+reg <- lm(qua~nat+loc+dig
+          +lag1nat+lag2nat+lag3nat+lag4nat+lag5nat
+          +lag1loc+lag2loc+lag3loc+lag4loc+lag5loc
+          +lag1dig+lag2dig+lag3dig+lag4dig+lag5dig
+          +compnat+comploc+compdig
+          +lag1compnat+lag2compnat+lag3compnat+lag4compnat+lag5compnat
+          +lag1comploc+lag2comploc+lag3comploc+lag4comploc+lag5comploc
+          +lag1compdig+lag2compdig+lag3compdig+lag4compdig+lag5compdig
+          +lag1qua+lag2qua+lag3qua+lag4qua+lag5qua+lag6qua+lag7qua+lag8qua+lag9qua+lag10qua+lag11qua+lag12qua+lag13qua
+          +lag1val+lag2val+lag3val+lag4val+lag5val+lag6val+lag7val+lag8val+lag9val+lag10val+lag11val+lag12val+lag13val
+          +lag1sat+lag2sat+lag3sat+lag4sat+lag5sat+lag6sat+lag7sat+lag8sat+lag9sat+lag10sat+lag11sat+lag12sat+lag13sat
+          +as.factor(Brand)+as.factor(time_period), data=dat)
+
+reg
+```
+
+Question 2
+felm regression
+```{r}
+reg_2 <- felm (qua~nat
+               +lag1nat+lag2nat+lag3nat+lag4nat+lag5nat
+               +loc+lag1loc+lag2loc+lag3loc+lag4loc+lag5loc
+               +dig+lag1dig+lag2dig+lag3dig+lag4dig+lag5dig
+               +compnat
+               +lag1compnat+lag2compnat+lag3compnat+lag4compnat+lag5compnat
+               +comploc+lag1comploc+lag2comploc+lag3comploc+lag4comploc+lag5comploc
+               +compdig+lag1compdig+lag2compdig+lag3compdig+lag4compdig+lag5compdig
+               +lag1qua+lag2qua+lag3qua+lag4qua+lag5qua+lag6qua+lag7qua+lag8qua+lag9qua+lag10qua+lag11qua+lag12qua+lag13qua
+               +lag1val+lag2val+lag3val+lag4val+lag5val+lag6val+lag7val+lag8val+lag9val+lag10val+lag11val+lag12val+lag13val
+               +lag1sat+lag2sat+lag3sat+lag4sat+lag5sat+lag6sat+lag7sat+lag8sat+lag9sat+lag10sat+lag11sat+lag12sat+lag13sat
+               |as.factor(Brand) + as.factor(time_period), data = dat)
+
+reg_2
+```
+
+Question 3
+weight the data by qua_vol
+```{r}
+qua_vol <- dat$qua_vol
+reg_3 <- felm (qua~nat
+               +lag1nat+lag2nat+lag3nat+lag4nat+lag5nat
+               +loc+lag1loc+lag2loc+lag3loc+lag4loc+lag5loc
+               +dig+lag1dig+lag2dig+lag3dig+lag4dig+lag5dig
+               +compnat
+               +lag1compnat+lag2compnat+lag3compnat+lag4compnat+lag5compnat
+               +comploc+lag1comploc+lag2comploc+lag3comploc+lag4comploc+lag5comploc
+               +compdig+lag1compdig+lag2compdig+lag3compdig+lag4compdig+lag5compdig
+               +lag1qua+lag2qua+lag3qua+lag4qua+lag5qua+lag6qua+lag7qua+lag8qua+lag9qua+lag10qua+lag11qua+lag12qua+lag13qua
+               +lag1val+lag2val+lag3val+lag4val+lag5val+lag6val+lag7val+lag8val+lag9val+lag10val+lag11val+lag12val+lag13val
+               +lag1sat+lag2sat+lag3sat+lag4sat+lag5sat+lag6sat+lag7sat+lag8sat+lag9sat+lag10sat+lag11sat+lag12sat+lag13sat
+               |as.factor(Brand) + as.factor(time_period), data = dat, weights = qua_vol)
+
+reg_3
+```
+
+Question 4
+replace the brand fixed effects with brand-quarter fixed effects
+```{r}
+reg_4 <- felm (qua~nat
+               +lag1nat+lag2nat+lag3nat+lag4nat+lag5nat
+               +loc+lag1loc+lag2loc+lag3loc+lag4loc+lag5loc
+               +dig+lag1dig+lag2dig+lag3dig+lag4dig+lag5dig
+               +compnat
+               +lag1compnat+lag2compnat+lag3compnat+lag4compnat+lag5compnat
+               +comploc+lag1comploc+lag2comploc+lag3comploc+lag4comploc+lag5comploc
+               +compdig+lag1compdig+lag2compdig+lag3compdig+lag4compdig+lag5compdig
+               +lag1qua+lag2qua+lag3qua+lag4qua+lag5qua+lag6qua+lag7qua+lag8qua+lag9qua+lag10qua+lag11qua+lag12qua+lag13qua
+               +lag1val+lag2val+lag3val+lag4val+lag5val+lag6val+lag7val+lag8val+lag9val+lag10val+lag11val+lag12val+lag13val
+               +lag1sat+lag2sat+lag3sat+lag4sat+lag5sat+lag6sat+lag7sat+lag8sat+lag9sat+lag10sat+lag11sat+lag12sat+lag13sat
+               |as.factor(Brand)*as.factor(yrqtr) + as.factor(time_period), data = dat, weights = qua_vol)
+
+reg_4
+```
+
+Question 5
+replace the week fixed effects with industry-week fixed effects
+```{r}
+reg_5 <- felm (qua~nat
+               +lag1nat+lag2nat+lag3nat+lag4nat+lag5nat
+               +loc+lag1loc+lag2loc+lag3loc+lag4loc+lag5loc
+               +dig+lag1dig+lag2dig+lag3dig+lag4dig+lag5dig
+               +compnat
+               +lag1compnat+lag2compnat+lag3compnat+lag4compnat+lag5compnat
+               +comploc+lag1comploc+lag2comploc+lag3comploc+lag4comploc+lag5comploc
+               +compdig+lag1compdig+lag2compdig+lag3compdig+lag4compdig+lag5compdig
+               +lag1qua+lag2qua+lag3qua+lag4qua+lag5qua+lag6qua+lag7qua+lag8qua+lag9qua+lag10qua+lag11qua+lag12qua+lag13qua
+               +lag1val+lag2val+lag3val+lag4val+lag5val+lag6val+lag7val+lag8val+lag9val+lag10val+lag11val+lag12val+lag13val
+               +lag1sat+lag2sat+lag3sat+lag4sat+lag5sat+lag6sat+lag7sat+lag8sat+lag9sat+lag10sat+lag11sat+lag12sat+lag13sat
+               |as.factor(Brand)*as.factor(yrqtr) + as.factor(time_period)* as.factor(Industry), data = dat, weights = qua_vol)
+
+reg_5
+```
+
+Question 6
+Create a pretty table that shows your advertising coefficient estimates for #2, 3, 4, and 5 side by side
+```{r}
+stargazer(reg_2,reg_3,reg_4,reg_5, title = "Ad Parameter Estimates for Brand Quality", 
+          column.labels = c("Felm regression", "Reg with Weights", "Reg with Brand-Quarter Effect", "Reg with Industry-Week Effect"),
+          digits = 8, ci.level = 0.95,
+          covariate.labels = c("National Trad. Ads (own) (t=0)","(t=1)","(t=2)","(t=3)","(t=4)","(t=5)", 
+                               "Local Trad. Ads (own) (t=0)","(t=1)","(t=2)","(t=3)","(t=4)","(t=5)",
+                               "Digital Ads (own) (t=0)","(t=1)","(t=2)","(t=3)","(t=4)","(t=5)",
+                               "National Trad. Ads (comp) (t=0)","(t=1)","(t=2)","(t=3)","(t=4)","(t=5)", 
+                               "Local Trad. Ads (comp) (t=0)","(t=1)","(t=2)","(t=3)","(t=4)","(t=5)",
+                               "Digital Ads (comp) (t=0)","(t=1)","(t=2)","(t=3)","(t=4)","(t=5)"),
+          omit = c("lag1qua", "lag2qua", "lag3qua", "lag4qua", "lag5qua", "lag6qua", "lag7qua", "lag8qua", "lag9qua", "lag10qua", "lag11qua", "lag12qua", "lag13qua", 
+                   "lag1val", "lag2val", "lag3val", "lag4val", "lag5val", "lag6val", "lag7val", "lag8val", "lag9val", "lag10val", "lag11val", "lag12val", "lag13val", 
+                   "lag1sat", "lag2sat", "lag3sat", "lag4sat", "lag5sat", "lag6sat", "lag7sat", "lag8sat", "lag9sat", "lag10sat", "lag11sat", "lag12sat", "lag13sat"),
+          out = "output.htm")
+```
+
